@@ -1,0 +1,26 @@
+{
+  "name": "kakao-proxy",
+  "version": "1.0.1",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^6.0.0",
+    "mongodb": "^3.1.1",
+    "open": "0.0.5",
+    "redis": "^2.8.0",
+    "request": "^2.79.0",
+    "request-promise": "^4.1.1",
+    "restify": "^7.2.1",
+    "restify-plugins": "^1.6.0",
+    "swagger-client": "^2.1.18"
+  },
+  "engines": {
+    "node": "~8.1.4"
+  }
+}
