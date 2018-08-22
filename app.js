@@ -1,7 +1,6 @@
 var Swagger = require('swagger-client');
 var open = require('open');
 var rp = require('request-promise');
-var log = require('./db/log');
 var key = require('./db/key');
 var restify = require('restify');
 
@@ -41,8 +40,7 @@ function pollMessages(client, conversationId, kakaoResponse ) {
             .then(function (response) {
                 watermark = response.obj.watermark;                          
                 activities = response.obj.activities;
-                var activityMsg = `activities: ${JSON.stringify(activities)} + "," + watermark: ${watermark}`;
-                log.Log(activityMsg , function() { console.log(activityMsg); });
+                var activityMsg = `activities: ${JSON.stringify(activities)} + "," + watermark: ${watermark}`;                
                 if (activities && activities.length) {
                     var tempMsg = "";
                     // 내가 보낸 건 무시
@@ -64,8 +62,6 @@ function pollMessages(client, conversationId, kakaoResponse ) {
                                 "text": tempMsg
                             }
                         };   
-
-                        log.Log(responseMsg, function() { console.log(responseMsg); });
 
                         kakaoResponse.send(responseMsg);  
                         kakaoResponse.end();
@@ -92,7 +88,7 @@ server.use(restifyPlugins.acceptParser(server.acceptable));
 server.use(restifyPlugins.queryParser({ mapParams: true }));
 server.use(restifyPlugins.fullResponse());
 
-const port = process.env.port || process.env.PORT;
+const port = process.env.port || process.env.PORT || 80;
 
 server.get('/', function (request, response, next) {
     var keyboardResponse = {        
@@ -114,10 +110,6 @@ server.get('/keyboard', function (request, response, next) {
 server.post('/message', function(request, response, next) {
             
         var msg = JSON.stringify(request.body);        
-        log.Log(msg, function() {
-            console.log("카카오에서 받은 메세지: " + msg);
-        });        
-        
         var userKey = request.body.user_key;
         var input = request.body.content;        
 
@@ -125,7 +117,7 @@ server.post('/message', function(request, response, next) {
             checkConversationID(conversationId, function(conversationId){                
                 key.Set(userKey, conversationId, function() { 
                     var keyLog = `대화 ID 생성 카카오 키: ${userKey} , 루이스 대화 ID ${conversationId}`;
-                    log.Log(keyLog, function() { console.log(keyLog); });
+
                     sendMsg(conversationId, input, directLineClientName, function() {
                     });  
                     pollMessages(directClient, conversationId, response);
@@ -174,11 +166,7 @@ function sendMsg(conversationId, input, name, callback) {
         });                    
 }
 server.listen(port, function() { 
-        console.log('서버 가동중... in ' + port); 
-        log.Init(function() {
-            console.log('카카오 로그 초기화 성공');
-        });
-
+        console.log('서버 가동중... in ' + port);         
         key.Init(function() {
             console.log('레디스 캐시 초기화 성공');
         });
