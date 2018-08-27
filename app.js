@@ -14,7 +14,8 @@ var directLineSecret = process.env.directLineSecret;
 var directLineClientName = 'DirectLineClient';
 var directLineSpecUrl = 'https://docs.botframework.com/en-us/restapi/directline3/swagger.json';
 var directClient = null;
-// 자동 배포 에러 테스트
+// 자동 배포 에러 테스트 2
+var deployTest = "";
 //봇 서비스와 연동을 위한 direct line 연결 설정
 var directLineClient = rp(directLineSpecUrl)
     .then(function (spec) {
